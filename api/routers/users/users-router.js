@@ -5,8 +5,8 @@ const bcrypt = require("bcryptjs");
 
 router.get('/:id', (req, res) => {
     const { id } = req.params;
-    User.findBy(id).then(user => {
-        if (user) {
+    User.findById(id).then(user => {
+        if (user.length > 0) {
             res.status(200).json({ user });
         } else {
             res.status(400).json({ message: "Please supply a valid ID" })
@@ -18,11 +18,14 @@ router.get('/:id', (req, res) => {
 
 router.put('/:id', (req, res) => {
     const { id } = req.params;
-    const user = req.body
+    const user = req.body;
+    console.log(user)
     if (user.password) {
-        const hash = bcrypt.hashSync(user.password, 10);
+        const hash = bcrypt.hashSync(user.password, 16);
         user.password = hash;
     }
+    console.log(user)
+
     User.updateUser(user, id).then(updated => {
         if (updated) {
             res.status(200).json({ updated })
