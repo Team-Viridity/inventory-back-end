@@ -14,8 +14,8 @@ router.post("/register", (req, res) => {
         res.status(400).json({ message: "Password must be at least 8 characters long."})
     }
     User.addUser(req.body)
-        .then(id => {
-            User.findById(id.id)
+        .then(response => {
+            User.findById(response.id)
                 .first()
                 .then(user => {
                     const token = Token(user);
@@ -31,6 +31,7 @@ router.post("/register", (req, res) => {
 })
 
 router.post("/login", (req, res) => {
+    let { email, password } = req.body;
     if (!email || !password){
         res.status(400).json({ message: "Please supply a email and password."});
     } 
